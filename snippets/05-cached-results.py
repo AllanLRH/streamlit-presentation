@@ -42,7 +42,7 @@ fig, ax = plt.subplots(figsize=[8, 4])
 sns.violinplot(
     x=dfc["installdat"],
     y=dfc["shape__length"],
-    palette="magma",
+    color="teal",
     linewidth=0,
     ax=ax,
 )
