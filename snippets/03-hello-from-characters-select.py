@@ -10,9 +10,7 @@ greeting_quotes = {
     "King Lonaidas": "This is Sparta!",
 }
 
-character = st.selectbox(
-    "Which character do you like best?", list(greeting_quotes.keys())
-)
+character = st.selectbox("Which character do you like best?", list(greeting_quotes.keys()))
 
 if greeting_quotes[character] is not None:
     msg = f"""

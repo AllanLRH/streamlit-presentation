@@ -129,3 +129,5 @@ dmypy.json
 .pyre/
 
 .vscode
+demo-self-driving
+yolov3*

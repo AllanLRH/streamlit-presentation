@@ -9,11 +9,7 @@ import streamlit as st
 
 @st.cache
 def get_data(delay=0):
-    df = (
-        pd.read_csv("assets/Existing_Bike_Network.csv")
-        .rename(columns=str.lower)
-        .set_index("fid")
-    )
+    df = pd.read_csv("assets/Existing_Bike_Network.csv").rename(columns=str.lower).set_index("fid")
     time.sleep(delay)
     return df
 
@@ -21,9 +17,7 @@ def get_data(delay=0):
 st.title("Boston bicycle routes")
 df = get_data(3).sort_values("installdat")
 if st.checkbox("Show raw data", False):
-    show_as = st.selectbox(
-        "How should the data be shown?", ["Interactive DataFrame", "Static table"]
-    )
+    show_as = st.selectbox("How should the data be shown?", ["Interactive DataFrame", "Static table"])
     if show_as == "Interactive DataFrame":
         if st.button("Toggle heatmap on `shape__length` column"):
             format_dict = {"shape__length": "{0:,.1f}"}
@@ -32,9 +26,7 @@ if st.checkbox("Show raw data", False):
                   """
             st.markdown(msg)
             st.dataframe(
-                df.style.format(format_dict).background_gradient(
-                    subset=["shape__length"], cmap="BuGn"
-                )
+                df.style.format(format_dict).background_gradient(subset=["shape__length"], cmap="BuGn")
             )
         else:
             st.dataframe(df)
@@ -44,22 +36,14 @@ if st.checkbox("Show raw data", False):
 
 st.subheader("Check the boxes to see histograms")
 
-n_std = st.slider(
-    "How many standard deviations from the median should be allowed?", 1, 10, 10
-)
+n_std = st.slider("How many standard deviations from the median should be allowed?", 1, 10, 10)
 grid_bool = st.checkbox("Toggle grid")
 med, std = df.shape__length.median(), df.shape__length.std()
-dfc = df.query(
-    "(shape__length > (@med - @n_std*@std)) & (shape__length < (@med + @n_std*@std))"
-)
+dfc = df.query("(shape__length > (@med - @n_std*@std)) & (shape__length < (@med + @n_std*@std))")
 
 fig, ax = plt.subplots(figsize=[8, 4])
 sns.violinplot(
-    x=dfc["installdat"],
-    y=dfc["shape__length"],
-    color="teal",
-    linewidth=0,
-    ax=ax,
+    x=dfc["installdat"], y=dfc["shape__length"], color="teal", linewidth=0, ax=ax,
 )
 if grid_bool:
     ax.grid()

@@ -43,11 +43,7 @@ dfc = df.query("(shape__length > (@med - @n_std*@std)) & (shape__length < (@med 
 
 fig, ax = plt.subplots(figsize=[8, 4])
 sns.violinplot(
-    x=dfc["installdat"],
-    y=dfc["shape__length"],
-    color="teal",
-    linewidth=0,
-    ax=ax,
+    x=dfc["installdat"], y=dfc["shape__length"], color="teal", linewidth=0, ax=ax,
 )
 if grid_bool:
     ax.grid()

@@ -1,4 +1,4 @@
-streamlit
+streamlit>0.66
 seaborn
 altair
 plotly
@@ -10,3 +10,7 @@ loguru  # for dead-simple logging
 jinja2  # for pandas styling
 numexpr  # for efficient use of .query on Pandas DataFrames
 # streamlit-folium  # check that no data us being leaked to the mapping service
+
+# For the selfdriving car demo
+opencv-python-headless
+# opencv-python

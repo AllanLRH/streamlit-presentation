@@ -18,10 +18,7 @@ DATE_COLUMN = "date-time"
 # @st.cache
 @st.cache(suppress_st_warning=True)  # https://docs.streamlit.io/en/stable/caching.html
 def load_data(nrows):
-    DATA_URL = (
-        "https://s3-us-west-2.amazonaws.com/"
-        "streamlit-demo-data/uber-raw-data-sep14.csv.gz"
-    )
+    DATA_URL = "https://s3-us-west-2.amazonaws.com/" "streamlit-demo-data/uber-raw-data-sep14.csv.gz"
     data = (
         pd.read_csv(DATA_URL, nrows=nrows)
         .rename(str.lower, axis="columns")
@@ -56,12 +53,8 @@ Use the sliders to adjust the timespan shown on the map (both inclusive)
 """
 st.markdown(msg)
 
-hour_of_day_lower, hour_of_day_upper = st.slider(
-    "Span of hours to show", 0, 23, [14, 18]
-)
+hour_of_day_lower, hour_of_day_upper = st.slider("Span of hours to show", 0, 23, [14, 18])
 st.write(f"Showing data between {hour_of_day_lower} and {hour_of_day_upper}")
 
-data_mapped = data.query(
-    "(pickup_hour >= @hour_of_day_lower) & (pickup_hour <= @hour_of_day_upper)"
-)
+data_mapped = data.query("(pickup_hour >= @hour_of_day_lower) & (pickup_hour <= @hour_of_day_upper)")
 st.map(data_mapped)
