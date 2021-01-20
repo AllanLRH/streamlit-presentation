@@ -1,7 +1,11 @@
 streamlit>0.66
 seaborn
 altair
+vega_datasets
+sklearn
 plotly
+bokeh
+graphviz
 streamlit-vega-lite
 hiplot
 pillow  # To show images
