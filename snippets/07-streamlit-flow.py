@@ -13,9 +13,11 @@ r = requests.get("https://docs.streamlit.io/en/stable/_static/logomark_website.p
 r.raise_for_status()
 img = Image.open(r.raw)
 
-lc, rc = st.beta_columns([4, 20])
-lc.image(img)
-rc.title("Streamlit execution flow recap")
+logo_column, header_column = st.beta_columns([4, 20])
+with logo_column:
+    st.image(img)
+with header_column:
+    st.title("Streamlit execution flow recap")
 
 body = """
 1. Every time a user opens a browser tab pointing to your app, the script is re-executed.
