@@ -1,4 +1,4 @@
 import streamlit as st
 
-msg = "Hello, World!"
+msg = "Hello, World! :sunglasses:"
 st.write(msg)
