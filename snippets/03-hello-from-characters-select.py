@@ -18,5 +18,5 @@ if greeting_quotes[character] is not None:
     """
     st.markdown(msg)
 
-    img = Image.open(f"../assets/{character}.jpg")
+    img = Image.open(f"assets/{character}.jpg")
     st.image(img)
