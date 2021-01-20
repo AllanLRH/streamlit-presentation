@@ -51,7 +51,9 @@ med, std = df.shape__length.median(), df.shape__length.std()
 # Let's create two collumns
 left_column, right_column = st.beta_columns(2)
 
-n_std = right_column.slider("How many standard deviations from the median should be allowed?", 1, 10, 10)
+n_std = right_column.slider(
+    "How many standard deviations from the median should be allowed?", 0.1, 10.0, 3.5
+)
 show_df: bool = left_column.checkbox("Show raw data", False)
 grid_bool: bool = left_column.checkbox("Toggle plot grid", True)
 
