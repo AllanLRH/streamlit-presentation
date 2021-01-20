@@ -1,7 +1,12 @@
 import streamlit as st
 from PIL import Image
 import requests
-import io
+
+# See a list of supported emojis here:
+# https://raw.githubusercontent.com/omnidan/node-emoji/master/lib/emoji.json
+st.set_page_config(
+    page_title=None, page_icon=":dog:", layout="centered", initial_sidebar_state="collapsed"
+)
 
 # Download the streamlit logo
 r = requests.get("https://docs.streamlit.io/en/stable/_static/logomark_website.png", stream=True)
@@ -23,3 +28,8 @@ body = """
 """
 
 st.markdown(body, unsafe_allow_html=True)
+
+
+if st.sidebar.button("Dogtax?"):
+    img = Image.open("assets/solvej.jpg")
+    st.image(img, use_column_width=True)

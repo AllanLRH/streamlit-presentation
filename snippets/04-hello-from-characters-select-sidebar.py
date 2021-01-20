@@ -20,7 +20,3 @@ if greeting_quotes[character] is not None:
 
     img = Image.open(f"assets/{character}.jpg")
     st.image(img, width=800)
-
-if st.sidebar.button("Click if you like dogs"):
-    img = Image.open(f"assets/solvej.jpg")
-    st.image(img, width=800)
