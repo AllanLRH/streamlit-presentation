@@ -8,6 +8,14 @@ import streamlit as st
 
 # NOTE: You may need to clear the cache, see the menu top right, or press 'C' in the browser
 # This turns off hashing for this DataFrame, because I KNOW that it's not changing
+#
+# Hashing None is _fast_, hashing a large DataFrame is _slow_.
+# Notice that we provide Streamlit with a value to use in it's internal hash function,
+# NOT the hashed value of the dataframe.
+#
+# The hash functinality can be further overwritten to include e.g. contents or filesystem-timestamps
+# of a file:
+# https://docs.streamlit.io/en/stable/api.html#streamlit.image
 @st.cache(hash_funcs={pd.DataFrame: lambda _: None})
 def get_data(delay=0):
     df = pd.read_csv("assets/Existing_Bike_Network.csv").rename(columns=str.lower).set_index("fid")
@@ -19,6 +27,7 @@ def get_data(delay=0):
 def show_raw_data():
     show_as = st.selectbox("How should the data be shown?", ["Interactive DataFrame", "Static table"])
     interesting_cols = ["street_nam", "jurisdicti", "installdat", "exisfacil", "shape__length"]
+    # We're careful not to change the DataFrame from get_data, due to disabling hashing
     df_show = df.loc[:, interesting_cols]  # We make a copy of df as to not mutate it
     if show_as == "Interactive DataFrame":
         if st.button("Toggle heatmap on `shape__length` column"):
@@ -76,6 +85,7 @@ st.pyplot(ax.get_figure())
 if show_df:
     show_raw_data()
 
+# A few notes on caching
 if st.sidebar.button("Toggle details about caching"):
     msg = """
     ### The following elements are tracked for cache invalidation
