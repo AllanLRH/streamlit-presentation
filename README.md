@@ -2,7 +2,7 @@
 
 Streamlit presentation for the Datascience chapter
 
-Standing in the project root, launch the file using `streamlit run snippets/00-hello-world-py`.
+Standing in the project root, launch the file using `streamlit run snippets/00-hello-world.py`.
 
 When developing with Streamlit, check out the [cheatsheet](https://share.streamlit.io/daniellewisdl/streamlit-cheat-sheet/app.py)!
 
