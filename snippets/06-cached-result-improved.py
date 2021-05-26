@@ -1,6 +1,8 @@
 import time
 
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+from typing import Tuple
 import pandas as pd
 import seaborn as sns
 import streamlit as st
@@ -21,6 +23,15 @@ def get_data(delay=0):
     df = pd.read_csv("assets/Existing_Bike_Network.csv").rename(columns=str.lower).set_index("fid")
     time.sleep(delay)
     return df
+
+
+@st.cache(hash_funcs={mpl.figure.Figure: lambda _: None})
+def get_plot(data: pd.DataFrame, x: str, y: str, grid: bool) -> Tuple[plt.Figure, plt.Axes]:
+    fig, ax = plt.subplots(figsize=[8, 4])
+    sns.violinplot(data=data, x=x, y=y, color="teal", linewidth=0, ax=ax)
+    if grid_bool:
+        ax.grid()
+    return fig, ax 
 
 
 # This is a big chunk of code, so it's a good candidate for a function
@@ -68,19 +79,9 @@ grid_bool: bool = left_column.checkbox("Toggle plot grid", True)
 
 dfc = df.query("(shape__length > (@med - @n_std*@std)) & (shape__length < (@med + @n_std*@std))")
 
-fig, ax = plt.subplots(figsize=[8, 4])
-sns.violinplot(
-    x=dfc["installdat"],
-    y=dfc["shape__length"],
-    color="teal",
-    linewidth=0,
-    ax=ax,
-)
-if grid_bool:
-    ax.grid()
 
-
-st.pyplot(ax.get_figure())
+fig, ax = get_plot(dfc, x="installdat", y="shape__length", grid=True)
+st.pyplot(fig)
 
 if show_df:
     show_raw_data()
