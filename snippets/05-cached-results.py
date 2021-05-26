@@ -63,4 +63,4 @@ if grid_bool:
     ax.grid()
 
 st.pyplot(fig)
-st.pyplot(ax.get_figure())
+# st.pyplot(ax.get_figure())
