@@ -1,3 +1,10 @@
+# Demonstrate that Streamlit will render objects that's just "returned"
+# This is probably not a good idea compared to st.write and similar, but
+# it works in a jiff.
+#
+# Notice that elements are rendered in the order of evaluation (line-by-line top down, of course).
+
+
 import pandas as pd
 
 """

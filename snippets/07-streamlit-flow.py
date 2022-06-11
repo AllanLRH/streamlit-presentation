@@ -1,3 +1,6 @@
+# A recap of how streamlit is executed, plus a few tips.
+# Intended to be read in the browser.
+
 import streamlit as st
 from PIL import Image
 import requests
@@ -8,12 +11,12 @@ st.set_page_config(
     page_title=None, page_icon=":dog:", layout="centered", initial_sidebar_state="collapsed"
 )
 
-# Download the streamlit logo
-r = requests.get("https://docs.streamlit.io/en/stable/_static/logomark_website.png", stream=True)
+# Download the streamlit logo, omit saving to disk
+r = requests.get("https://streamlit.io/images/brand/streamlit-mark-color.png", stream=True)
 r.raise_for_status()
 img = Image.open(r.raw)
 
-logo_column, header_column = st.beta_columns([4, 20])
+logo_column, header_column = st.columns([3, 21])
 with logo_column:
     st.image(img)
 with header_column:

@@ -1,3 +1,6 @@
+# Same dashboard as before, but with improved caching. Be sure to read the
+# note in hte source code below and toggle the sidebar message
+
 import time
 
 import matplotlib.pyplot as plt
@@ -17,9 +20,20 @@ import streamlit as st
 # of a file:
 # https://docs.streamlit.io/en/stable/api.html#streamlit.image
 @st.cache(hash_funcs={pd.DataFrame: lambda _: None})
-def get_data(delay=0):
-    df = pd.read_csv("assets/Existing_Bike_Network.csv").rename(columns=str.lower).set_index("fid")
-    time.sleep(delay)
+def get_data(delay: int = 7) -> pd.DataFrame:
+    """
+    Load data, simulate a slow function by sleeping sleep.
+    `delay` is in seconds.
+    """
+    df = (
+        pd.read_csv("assets/Existing_Bike_Network.csv")
+        .rename(columns=str.lower)
+        .set_index("fid")
+        .sort_values("installdat")
+    )
+    df = df.loc[df["installdat"].str.len() == 4, :]
+    df["installdat"] = df["installdat"].astype(int)
+    time.sleep(delay)  # simulate a slow function
     return df
 
 
@@ -49,7 +63,8 @@ def show_raw_data():
 
 
 st.title("Boston bicycle routes (improved caching)")
-df = get_data(delay=3).sort_values("installdat")
+df = get_data()
+# st.write(str(df["installdat"].map(type).value_counts(())))
 
 # This part handles the plotting
 st.subheader("Distribution of ride lengths by year")
@@ -58,17 +73,17 @@ st.subheader("Distribution of ride lengths by year")
 med, std = df.shape__length.median(), df.shape__length.std()
 
 # Let's create two collumns
-left_column, right_column = st.beta_columns(2)
+left_column, right_column = st.columns(2)
 
-n_std = right_column.slider(
-    "How many standard deviations from the median should be allowed?", 0.1, 10.0, 3.5
-)
+n_std = right_column.slider("How many standard deviations from the median should be allowed?", 1, 5, 2)
 show_df: bool = left_column.checkbox("Show raw data", False)
 grid_bool: bool = left_column.checkbox("Toggle plot grid", True)
 
 dfc = df.query("(shape__length > (@med - @n_std*@std)) & (shape__length < (@med + @n_std*@std))")
 
 fig, ax = plt.subplots(figsize=[8, 4])
+if grid_bool:
+    ax.grid(linewidth=0.3)
 sns.violinplot(
     x=dfc["installdat"],
     y=dfc["shape__length"],
@@ -76,8 +91,6 @@ sns.violinplot(
     linewidth=0,
     ax=ax,
 )
-if grid_bool:
-    ax.grid()
 
 
 st.pyplot(ax.get_figure())
@@ -86,22 +99,23 @@ if show_df:
     show_raw_data()
 
 # A few notes on caching
-if st.sidebar.button("Toggle details about caching"):
-    msg = """
-    ### The following elements are tracked for cache invalidation
+with st.sidebar:
+    if st.button("Toggle details about caching"):
+        msg = """
+        ### The following elements are tracked for cache invalidation
 
-    1. The input parameters that you called the function with
-    1. The value of any external variable used in the function
-    1. The body of the function
-    1. The body of any function used inside the cached function (but not external libraries)
+        1. The input parameters that you called the function with
+        1. The value of any external variable used in the function
+        1. The body of the function
+        1. The body of any function used inside the cached function (but not external libraries)
 
-    ### Good to know about caching
+        ### Good to know about caching
 
-    * A hashmap (dict) is used for caching
-    * Caches are stored by reference
-    * The cached holds retun-value and a hash of said value
+        * A hashmap (dict) is used for caching
+        * Caches are stored by reference
+        * The cached holds retun-value and a hash of said value
 
-    For more information, read the documentation section<br>
-    _[Improve app performance → Advanced Caching](https://docs.streamlit.io/en/stable/caching.html#advanced-caching)_.
-    """
-    st.sidebar.markdown(msg, unsafe_allow_html=True)
+        For more information, read the documentation section<br>
+        _[Improve app performance → Advanced Caching](https://docs.streamlit.io/en/stable/caching.html#advanced-caching)_.
+        """
+        st.markdown(msg, unsafe_allow_html=True)

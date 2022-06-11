@@ -1,3 +1,5 @@
+# Same example as before, but this time we use the sidebar to place the widgets.
+
 import streamlit as st
 
 # The PIL project is abandonned, but the Pillow package is a drop-in replacement
@@ -15,9 +17,11 @@ greeting_quotes = {
     "King Lonaidas": "This is Sparta!",
 }
 
-# This renderes the drop-down menu, and `character` will take on the selected value from the dropdown list.
-# The initial value is the top item, because we didn't specify anything else.
-character = st.sidebar.selectbox("Which character do you like best?", list(greeting_quotes.keys()))
+# All widgets renderind in this context manager will be placed in the sidebar
+with st.sidebar:
+    # This renderes the drop-down menu, and `character` will take on the selected value from the dropdown list.
+    # The initial value is the top item, because we didn't specify anything else.
+    character = st.selectbox("Which character do you like best?", list(greeting_quotes.keys()))
 
 if greeting_quotes[character] is not None:
     msg = f"""

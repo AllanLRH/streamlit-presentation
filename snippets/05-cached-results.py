@@ -1,3 +1,6 @@
+# A more realistic dashboard, loading data, accepting user input, and rendering plots accordingly.
+# Notice that we use caching, so that the data loading is only slow the first time around. This is observed
+# each time a widget changes state, because the script is re-run each time that happens!
 import time
 
 import matplotlib.pyplot as plt
@@ -7,14 +10,25 @@ import streamlit as st
 
 
 @st.cache  # This will cache the output, read more about caching in the docs
-def get_data(delay=0):
-    df = pd.read_csv("assets/Existing_Bike_Network.csv").rename(columns=str.lower).set_index("fid")
+def get_data(delay: int = 7) -> pd.DataFrame:
+    """
+    Load data, simulate a slow function by sleeping sleep.
+    `delay` is in seconds.
+    """
+    df = (
+        pd.read_csv("assets/Existing_Bike_Network.csv")
+        .rename(columns=str.lower)
+        .set_index("fid")
+        .sort_values("installdat")
+    )
+    df = df.loc[df["installdat"].str.len() == 4, :]
+    df["installdat"] = df["installdat"].astype(int)
     time.sleep(delay)  # simulate a slow function
     return df
 
 
 st.title("Boston bicycle routes (caching)")
-df = get_data(3).sort_values("installdat")
+df = get_data()
 
 # This is for toggeling the display of the dataframe...
 if st.checkbox("Show raw data", False):
@@ -43,7 +57,7 @@ if st.checkbox("Show raw data", False):
 # This part handles the plotting
 st.subheader("Distribution of ride lengths by year")
 
-n_std = st.slider("How many standard deviations from the median should be allowed?", 1, 10, 10)
+n_std = st.slider("How many standard deviations from the median should be allowed?", 1, 5, 2)
 grid_bool = st.checkbox("Toggle grid")
 med, std = df.shape__length.median(), df.shape__length.std()
 # If we have a DataFrame with a lot of rows, filtering will require long (Numpy/Pandas) arrays for
@@ -52,6 +66,8 @@ med, std = df.shape__length.median(), df.shape__length.std()
 dfc = df.query("(shape__length > (@med - @n_std*@std)) & (shape__length < (@med + @n_std*@std))")
 
 fig, ax = plt.subplots(figsize=[8, 4])
+if grid_bool:
+    ax.grid(linewidth=0.3)
 sns.violinplot(
     x=dfc["installdat"],
     y=dfc["shape__length"],
@@ -59,8 +75,5 @@ sns.violinplot(
     linewidth=0,
     ax=ax,
 )
-if grid_bool:
-    ax.grid()
 
 st.pyplot(fig)
-# st.pyplot(ax.get_figure())

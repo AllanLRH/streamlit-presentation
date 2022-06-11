@@ -1,5 +1,12 @@
+# We can also use the Pillow library (impoted as PIL) to show images.
+# Interactivity is added using a st.selectbox.
+# Each time a widget state is changed, the file is executed all over again, but
+# with the widget state preserved. The output of the widgets may be used to change
+# what's being computed and rendered.
+
+
 import streamlit as st
-from PIL import Image
+from PIL import Image  # use the Pillow library, as PIL is unmaintained
 
 st.title("Greetings")
 

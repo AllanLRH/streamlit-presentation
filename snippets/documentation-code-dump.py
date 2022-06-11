@@ -215,7 +215,7 @@ str_definition_of_graph = """
     }
 """
 
-lc, rc = st.beta_columns(2)
+lc, rc = st.columns(2)
 lc.graphviz_chart(graph, use_container_width=True)
 rc.graphviz_chart(str_definition_of_graph, use_container_width=True)
 
