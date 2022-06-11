@@ -1,5 +1,8 @@
 # Same dashboard as before, but with improved caching. Be sure to read the
-# note in hte source code below and toggle the sidebar message
+# note in hte source code below and toggle the sidebar message.
+#
+# Some functionality is extracted into a function to keep the code a bit more readable.
+
 
 import time
 
